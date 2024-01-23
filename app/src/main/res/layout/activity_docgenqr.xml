@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <!-- Background Image -->
+    <ImageView
+        android:id="@+id/backgroundImageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/background3"
+        android:scaleType="centerCrop"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <!-- Vertical Layout Container -->
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!-- Header TextView -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout"
+            android:layout_width="match_parent"
+            android:layout_height="80dp">
+
+            <TextView
+                android:id="@+id/headertext"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:gravity="center"
+                android:text="AAL - PD"
+                android:textSize="48sp"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- TableLayout for Days of the Week -->
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@drawable/round_white_background"
+            android:stretchColumns="1">
+
+            <!-- Monday -->
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <TextView
+                    style="@style/AppTextView"
+                    android:text="Monday:" />
+
+                <SeekBar
+                    style="@style/AppSeekBar"
+                    android:id="@+id/mondaySlider" />
+            </TableRow>
+
+            <!-- Tuesday -->
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <TextView
+                    style="@style/AppTextView"
+                    android:text="Tuesday:" />
+
+                <SeekBar
+                    style="@style/AppSeekBar"
+                    android:id="@+id/tuesdaySlider" />
+            </TableRow>
+
+            <!-- Wednesday -->
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <TextView
+                    style="@style/AppTextView"
+                    android:text="Wednesday:" />
+
+                <SeekBar
+                    style="@style/AppSeekBar"
+                    android:id="@+id/wednesdaySlider" />
+            </TableRow>
+
+            <!-- Thursday -->
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <TextView
+                    style="@style/AppTextView"
+                    android:text="Thursday:" />
+
+                <SeekBar
+                    style="@style/AppSeekBar"
+                    android:id="@+id/thursdaySlider" />
+            </TableRow>
+
+            <!-- Friday -->
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <TextView
+                    style="@style/AppTextView"
+                    android:text="Friday:" />
+
+                <SeekBar
+                    style="@style/AppSeekBar"
+                    android:id="@+id/fridaySlider" />
+            </TableRow>
+
+            <!-- Saturday -->
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <TextView
+                    style="@style/AppTextView"
+                    android:text="Saturday:" />
+
+                <SeekBar
+                    style="@style/AppSeekBar"
+                    android:id="@+id/saturdaySlider" />
+            </TableRow>
+
+            <!-- Sunday -->
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <TextView
+                    style="@style/AppTextView"
+                    android:text="Sunday:" />
+
+                <SeekBar
+                    style="@style/AppSeekBar"
+                    android:id="@+id/sundaySlider" />
+            </TableRow>
+
+        </TableLayout>
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
