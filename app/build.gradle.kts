@@ -29,6 +29,7 @@ android {
 }
 
 dependencies {
+    implementation ("androidx.print:print:1.0.0")
     implementation ("com.google.zxing:core:3.4.1")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.11.0")
