@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,7 @@ public class docgenqr extends AppCompatActivity {
     private SeekBar mondaySlider, tuesdaySlider, wednesdaySlider, thursdaySlider, fridaySlider, saturdaySlider, sundaySlider;
     private Spinner patientSpinner;
     private Button addPatientButton;
+    private TextView mondayValue, tuesdayValue, wednesdayValue, thursdayValue, fridayValue, saturdayValue, sundayValue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +39,15 @@ public class docgenqr extends AppCompatActivity {
         sundaySlider = findViewById(R.id.sundaySlider);
         patientSpinner = findViewById(R.id.patientSpinner);
         addPatientButton = findViewById(R.id.addPatientButton);
+
+        // Initialize TextViews for displaying SeekBar values
+        mondayValue = findViewById(R.id.mondayValue);
+        tuesdayValue = findViewById(R.id.tuesdayValue);
+        wednesdayValue = findViewById(R.id.wednesdayValue);
+        thursdayValue = findViewById(R.id.thursdayValue);
+        fridayValue = findViewById(R.id.fridayValue);
+        saturdayValue = findViewById(R.id.saturdayValue);
+        sundayValue = findViewById(R.id.sundayValue);
 
         initializeSpinner();
 
@@ -62,7 +73,37 @@ public class docgenqr extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
+
+        // Set SeekBar change listeners to update the TextViews
+        setSeekBarChangeListener(mondaySlider, mondayValue);
+        setSeekBarChangeListener(tuesdaySlider, tuesdayValue);
+        setSeekBarChangeListener(wednesdaySlider, wednesdayValue);
+        setSeekBarChangeListener(thursdaySlider, thursdayValue);
+        setSeekBarChangeListener(fridaySlider, fridayValue);
+        setSeekBarChangeListener(saturdaySlider, saturdayValue);
+        setSeekBarChangeListener(sundaySlider, sundayValue);
     }
+
+    private void setSeekBarChangeListener(SeekBar seekBar, final TextView textView) {
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                // Update the corresponding TextView with the current progress
+                textView.setText(String.valueOf(progress));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                // Not needed for this example
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                // Not needed for this example
+            }
+        });
+    }
+
 
     private void initializeSpinner() {
         List<String> patients = new ArrayList<>();

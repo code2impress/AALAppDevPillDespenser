@@ -91,6 +91,16 @@
                 <SeekBar
                     style="@style/AppSeekBar"
                     android:id="@+id/mondaySlider" />
+
+                <!-- TextView to display the current value of Monday SeekBar -->
+                <TextView
+                    style="@style/AppTextView"
+                    android:id="@+id/mondayValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_marginStart="10dp"
+                    android:text="0" />
             </TableRow>
 
             <!-- Tuesday -->
@@ -106,6 +116,16 @@
                 <SeekBar
                     style="@style/AppSeekBar"
                     android:id="@+id/tuesdaySlider" />
+
+                <!-- TextView to display the current value of Tuesday SeekBar -->
+                <TextView
+                    style="@style/AppTextView"
+                    android:id="@+id/tuesdayValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_marginStart="10dp"
+                    android:text="0" />
             </TableRow>
 
             <!-- Wednesday -->
@@ -121,6 +141,16 @@
                 <SeekBar
                     style="@style/AppSeekBar"
                     android:id="@+id/wednesdaySlider" />
+
+                <!-- TextView to display the current value of Wednesday SeekBar -->
+                <TextView
+                    style="@style/AppTextView"
+                    android:id="@+id/wednesdayValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_marginStart="10dp"
+                    android:text="0" />
             </TableRow>
 
             <!-- Thursday -->
@@ -136,6 +166,16 @@
                 <SeekBar
                     style="@style/AppSeekBar"
                     android:id="@+id/thursdaySlider" />
+
+                <!-- TextView to display the current value of Thursday SeekBar -->
+                <TextView
+                    style="@style/AppTextView"
+                    android:id="@+id/thursdayValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_marginStart="10dp"
+                    android:text="0" />
             </TableRow>
 
             <!-- Friday -->
@@ -151,6 +191,16 @@
                 <SeekBar
                     style="@style/AppSeekBar"
                     android:id="@+id/fridaySlider" />
+
+                <!-- TextView to display the current value of Friday SeekBar -->
+                <TextView
+                    style="@style/AppTextView"
+                    android:id="@+id/fridayValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_marginStart="10dp"
+                    android:text="0" />
             </TableRow>
 
             <!-- Saturday -->
@@ -166,6 +216,16 @@
                 <SeekBar
                     style="@style/AppSeekBar"
                     android:id="@+id/saturdaySlider" />
+
+                <!-- TextView to display the current value of Saturday SeekBar -->
+                <TextView
+                    style="@style/AppTextView"
+                    android:id="@+id/saturdayValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_marginStart="10dp"
+                    android:text="0" />
             </TableRow>
 
             <!-- Sunday -->
@@ -181,6 +241,16 @@
                 <SeekBar
                     style="@style/AppSeekBar"
                     android:id="@+id/sundaySlider" />
+
+                <!-- TextView to display the current value of Sunday SeekBar -->
+                <TextView
+                    style="@style/AppTextView"
+                    android:id="@+id/sundayValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_marginStart="10dp"
+                    android:text="0" />
             </TableRow>
 
         </TableLayout>
