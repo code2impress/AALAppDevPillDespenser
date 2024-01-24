@@ -77,14 +77,14 @@ public class docgenqr extends AppCompatActivity {
             }
         });
 
-        // Set SeekBar change listeners to update the TextViews
-        setSeekBarChangeListener(mondaySlider, mondayValue);
-        setSeekBarChangeListener(tuesdaySlider, tuesdayValue);
-        setSeekBarChangeListener(wednesdaySlider, wednesdayValue);
-        setSeekBarChangeListener(thursdaySlider, thursdayValue);
-        setSeekBarChangeListener(fridaySlider, fridayValue);
-        setSeekBarChangeListener(saturdaySlider, saturdayValue);
-        setSeekBarChangeListener(sundaySlider, sundayValue);
+        setSeekBarChangeListener(mondaySlider, mondayValue, "Monday");
+        setSeekBarChangeListener(tuesdaySlider, tuesdayValue, "Tuesday");
+        setSeekBarChangeListener(wednesdaySlider, wednesdayValue, "Wednesday");
+        setSeekBarChangeListener(thursdaySlider, thursdayValue, "Thursday");
+        setSeekBarChangeListener(fridaySlider, fridayValue, "Friday");
+        setSeekBarChangeListener(saturdaySlider, saturdayValue, "Saturday");
+        setSeekBarChangeListener(sundaySlider, sundayValue, "Sunday");
+
 
         // Initialize the ImageButton
 // Inside onCreate method of docgenqr activity
@@ -99,7 +99,10 @@ public class docgenqr extends AppCompatActivity {
                 intent.putExtra("patientName", patient.getName());
                 intent.putExtra("mondayValue", patient.getMondayValue());
                 intent.putExtra("tuesdayValue", patient.getTuesdayValue());
-                // ... put all other day values in the same way
+                intent.putExtra("wednesdayValue", patient.getWednesdayValue());
+                intent.putExtra("thursdayValue", patient.getThursdayValue());
+                intent.putExtra("fridayValue", patient.getFridayValue());
+                intent.putExtra("saturdayValue", patient.getSaturdayValue());
                 intent.putExtra("sundayValue", patient.getSundayValue());
                 startActivity(intent);
             } else {
@@ -109,11 +112,10 @@ public class docgenqr extends AppCompatActivity {
 
     }
 
-    private void setSeekBarChangeListener(SeekBar seekBar, final TextView textView) {
+    private void setSeekBarChangeListener(SeekBar seekBar, final TextView textView, final String day) {
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                // Update the corresponding TextView with the current progress
                 textView.setText(String.valueOf(progress));
             }
 
@@ -124,10 +126,22 @@ public class docgenqr extends AppCompatActivity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                // Not needed for this example
+                // Get the selected patient name
+                String patientName = patientSpinner.getSelectedItem().toString();
+                if (!patientName.equals("New Patient...")) {
+                    // Get the value of the slider
+                    int value = seekBar.getProgress();
+
+                    // Update the patient's data in the database
+                    PatientDatabaseHelper dbHelper = new PatientDatabaseHelper(docgenqr.this);
+                    dbHelper.updatePatientDayValue(patientName, day, value);
+
+                    Toast.makeText(docgenqr.this, "Updated " + day + " value for " + patientName, Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
+
 
 
     private void initializeSpinner() {
@@ -223,11 +237,12 @@ public class docgenqr extends AppCompatActivity {
         if (patient != null) {
             mondaySlider.setProgress(patient.getMondayValue());
             tuesdaySlider.setProgress(patient.getTuesdayValue());
-            wednesdaySlider.setProgress(patient.getTuesdayValue());
-            thursdaySlider.setProgress(patient.getTuesdayValue());
-            fridaySlider.setProgress(patient.getTuesdayValue());
-            saturdaySlider.setProgress(patient.getTuesdayValue());
-            sundaySlider.setProgress(patient.getTuesdayValue());
+            wednesdaySlider.setProgress(patient.getWednesdayValue());
+            thursdaySlider.setProgress(patient.getThursdayValue());
+            fridaySlider.setProgress(patient.getFridayValue());
+            saturdaySlider.setProgress(patient.getSaturdayValue());
+            sundaySlider.setProgress(patient.getSundayValue());
+
 
         }
     }

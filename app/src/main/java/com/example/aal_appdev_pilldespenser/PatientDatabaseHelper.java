@@ -91,5 +91,39 @@ public class PatientDatabaseHelper extends SQLiteOpenHelper {
         return null;
     }
 
+    // Add this method in the PatientDatabaseHelper class
+    public void updatePatientDayValue(String patientName, String day, int value) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        switch(day) {
+            case "Monday":
+                values.put(KEY_MONDAY_VALUE, value);
+                break;
+            case "Tuesday":
+                values.put(KEY_TUESDAY_VALUE, value);
+                break;
+            case "Wednesday":
+                values.put(KEY_WEDNESDAY_VALUE, value);
+                break;
+            case "Thursday":
+                values.put(KEY_THURSDAY_VALUE, value);
+                break;
+            case "Friday":
+                values.put(KEY_FRIDAY_VALUE, value);
+                break;
+            case "Saturday":
+                values.put(KEY_SATURDAY_VALUE, value);
+                break;
+            case "Sunday":
+                values.put(KEY_SUNDAY_VALUE, value);
+                break;
+        }
+
+        db.update(TABLE_PATIENTS, values, KEY_PATIENT_NAME + " = ?", new String[]{ patientName });
+        db.close();
+    }
+
+
     // Additional methods for updating, deleting, and fetching patients can be added here
 }
