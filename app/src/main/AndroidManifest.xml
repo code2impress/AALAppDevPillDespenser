@@ -13,6 +13,9 @@
         android:theme="@style/Theme.AALAppDevPillDespenser"
         tools:targetApi="31">
         <activity
+            android:name=".ShowQR"
+            android:exported="false" />
+        <activity
             android:name=".docgenqr"
             android:exported="false" />
         <activity

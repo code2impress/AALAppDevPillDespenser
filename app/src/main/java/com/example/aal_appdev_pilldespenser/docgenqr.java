@@ -12,6 +12,9 @@ import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.content.Intent;
+import android.os.Bundle;
+import android.widget.ImageButton;
 import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
@@ -82,6 +85,28 @@ public class docgenqr extends AppCompatActivity {
         setSeekBarChangeListener(fridaySlider, fridayValue);
         setSeekBarChangeListener(saturdaySlider, saturdayValue);
         setSeekBarChangeListener(sundaySlider, sundayValue);
+
+        // Initialize the ImageButton
+// Inside onCreate method of docgenqr activity
+        ImageButton imageButton = findViewById(R.id.button2);
+        imageButton.setOnClickListener(view -> {
+            String selectedPatientName = patientSpinner.getSelectedItem().toString();
+            PatientDatabaseHelper dbHelper = new PatientDatabaseHelper(this);
+            Patient patient = dbHelper.getPatient(selectedPatientName);
+
+            if (patient != null) {
+                Intent intent = new Intent(docgenqr.this, ShowQR.class);
+                intent.putExtra("patientName", patient.getName());
+                intent.putExtra("mondayValue", patient.getMondayValue());
+                intent.putExtra("tuesdayValue", patient.getTuesdayValue());
+                // ... put all other day values in the same way
+                intent.putExtra("sundayValue", patient.getSundayValue());
+                startActivity(intent);
+            } else {
+                Toast.makeText(this, "Patient not found", Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
     private void setSeekBarChangeListener(SeekBar seekBar, final TextView textView) {

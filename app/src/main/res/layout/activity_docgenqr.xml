@@ -45,6 +45,7 @@
                 android:textSize="48sp"
                 android:textStyle="bold"
                 android:textColor="#FFFFFF"
+
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -251,6 +252,25 @@
                     android:gravity="center_vertical"
                     android:layout_marginStart="10dp"
                     android:text="0" />
+            </TableRow>
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center_horizontal">
+
+                <ImageButton
+                    android:id="@+id/button2"
+                    android:layout_width="186dp"
+                    android:layout_height="102dp"
+                    android:background="@drawable/rounded_button2"
+                    android:padding="10dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/qr"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent" />
             </TableRow>
 
         </TableLayout>
