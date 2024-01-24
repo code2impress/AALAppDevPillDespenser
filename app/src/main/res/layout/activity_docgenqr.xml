@@ -59,6 +59,24 @@
             android:layout_weight="1"
             android:background="@drawable/round_white_background"
             android:stretchColumns="1">
+            <!-- Patient Selection Row -->
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    style="@style/AppTextView"
+                    android:text="Patient:" />
+
+                <Spinner
+                    android:id="@+id/patientSpinner"
+                    style="@style/AppSeekBar" />
+
+                <Button
+                    android:id="@+id/addPatientButton"
+                    style="@style/AppSeekBar"
+                    android:text="Add Patient" />
+            </TableRow>
 
             <!-- Monday -->
             <TableRow
