@@ -34,10 +34,11 @@ public class MainActivity extends AppCompatActivity {
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, docgenqr.class);
+                Intent intent = new Intent(MainActivity.this, LoginDOC.class);
                 startActivity(intent);
             }
         });
+
 
         // Setup for button1
         ImageButton button1 = findViewById(R.id.button1);
