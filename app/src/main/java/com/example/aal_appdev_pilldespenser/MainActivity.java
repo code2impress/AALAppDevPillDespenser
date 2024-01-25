@@ -49,6 +49,16 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        // Setup for loginPatButton
+        ImageButton loginPatButton = findViewById(R.id.loginPatButton);
+        loginPatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, LoginPAT.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
