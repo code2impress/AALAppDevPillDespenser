@@ -91,4 +91,13 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp" />
 
+    <Button
+        android:id="@+id/logoutButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Logout"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_marginBottom="20dp"
+        android:visibility="gone" />
+
 </FrameLayout>

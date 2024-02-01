@@ -7,6 +7,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import android.content.Intent;
+import android.content.SharedPreferences;
 
 public class LoginDOC extends AppCompatActivity {
 
@@ -32,21 +33,30 @@ public class LoginDOC extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Get username and password from EditTexts
                 String username = usernameEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
 
                 // Validate credentials using the UserDatabaseHelper
-                if (userDatabaseHelper.validateUser(username, password)) {
-                    // If credentials are valid, proceed to docgenqr activity
+                String userType = userDatabaseHelper.validateUser(username, password);
+                if (userType != null && "doctor".equals(userType)) {
+                    // If credentials are valid and the user is a doctor, save login state and proceed to docgenqr activity
+                    saveLoginState(userType); // Save login state
                     Intent intent = new Intent(LoginDOC.this, docgenqr.class);
                     startActivity(intent);
                     finish(); // Optionally close the LoginDOC activity
                 } else {
-                    // Handle invalid credentials case
+                    // Handle invalid credentials or incorrect user type case
                     Toast.makeText(LoginDOC.this, "Access Denied", Toast.LENGTH_LONG).show();
                 }
             }
         });
+    }
+
+    public void saveLoginState(String userType) {
+        SharedPreferences sharedPreferences = getSharedPreferences("LoginPrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("isLoggedIn", true);
+        editor.putString("userType", userType);
+        editor.apply();
     }
 }
