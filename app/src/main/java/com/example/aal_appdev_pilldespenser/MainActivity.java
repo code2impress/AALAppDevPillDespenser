@@ -70,11 +70,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 SharedPreferences sharedPreferences = getSharedPreferences("LoginPrefs", MODE_PRIVATE);
+                boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
                 String userType = sharedPreferences.getString("userType", "");
 
-                if ("patient".equals(userType)) {
+                if (isLoggedIn && "doctor".equals(userType)) {
+                    // User is a doctor and logged in, skip directly to docgenqr activity
+                    Intent intent = new Intent(MainActivity.this, docgenqr.class);
+                    startActivity(intent);
+                } else if ("patient".equals(userType)) {
+                    // If a patient is trying to access, show a toast message
                     Toast.makeText(MainActivity.this, "Only for Medical Personnel", Toast.LENGTH_LONG).show();
                 } else {
+                    // Otherwise, go to the LoginDOC activity for login
                     Intent intent = new Intent(MainActivity.this, LoginDOC.class);
                     startActivity(intent);
                 }

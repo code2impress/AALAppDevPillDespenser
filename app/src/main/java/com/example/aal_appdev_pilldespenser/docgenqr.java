@@ -62,13 +62,16 @@ public class docgenqr extends AppCompatActivity {
             }
         });
 
-        // Handle Spinner Item Selected
+// Handle Spinner Item Selected
         patientSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selectedPatientName = parent.getItemAtPosition(position).toString();
                 if (!selectedPatientName.equals("New Patient...")) {
                     loadPatientData(selectedPatientName);
+                } else {
+                    // Reset sliders and text views to 0 when "New Patient..." is selected
+                    resetSlidersAndTextViews();
                 }
             }
 
@@ -76,6 +79,7 @@ public class docgenqr extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
+
 
         setSeekBarChangeListener(mondaySlider, mondayValue, "Monday");
         setSeekBarChangeListener(tuesdaySlider, tuesdayValue, "Tuesday");
@@ -87,7 +91,7 @@ public class docgenqr extends AppCompatActivity {
 
 
         // Initialize the ImageButton
-// Inside onCreate method of docgenqr activity
+        // Inside onCreate method of docgenqr activity
         ImageButton imageButton = findViewById(R.id.button2);
         imageButton.setOnClickListener(view -> {
             String selectedPatientName = patientSpinner.getSelectedItem().toString();
@@ -110,6 +114,25 @@ public class docgenqr extends AppCompatActivity {
             }
         });
 
+    }
+
+    // Implement the resetSlidersAndTextViews method
+    private void resetSlidersAndTextViews() {
+        mondaySlider.setProgress(0);
+        tuesdaySlider.setProgress(0);
+        wednesdaySlider.setProgress(0);
+        thursdaySlider.setProgress(0);
+        fridaySlider.setProgress(0);
+        saturdaySlider.setProgress(0);
+        sundaySlider.setProgress(0);
+
+        mondayValue.setText("0");
+        tuesdayValue.setText("0");
+        wednesdayValue.setText("0");
+        thursdayValue.setText("0");
+        fridayValue.setText("0");
+        saturdayValue.setText("0");
+        sundayValue.setText("0");
     }
 
     private void setSeekBarChangeListener(SeekBar seekBar, final TextView textView, final String day) {
@@ -145,13 +168,17 @@ public class docgenqr extends AppCompatActivity {
 
 
     private void initializeSpinner() {
-        List<String> patients = new ArrayList<>();
-        patients.add("New Patient...");
-        // TODO: Load existing patients from the database here
+        PatientDatabaseHelper dbHelper = new PatientDatabaseHelper(this);
+        List<String> patients = dbHelper.getAllPatientNames();
+
+        // Ensure "New Patient..." is at the beginning of the list
+        patients.add(0, "New Patient...");
+
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, patients);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         patientSpinner.setAdapter(adapter);
     }
+
 
     private void addPatient() {
         // Retrieve slider values

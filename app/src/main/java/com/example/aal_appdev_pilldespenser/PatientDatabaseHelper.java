@@ -5,11 +5,13 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PatientDatabaseHelper extends SQLiteOpenHelper {
     // Database Info
     private static final String DATABASE_NAME = "PatientDatabase";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     // Table Names
     private static final String TABLE_PATIENTS = "patients";
@@ -54,7 +56,6 @@ public class PatientDatabaseHelper extends SQLiteOpenHelper {
 
     public void addPatient(Patient patient) {
         SQLiteDatabase db = this.getWritableDatabase();
-
         ContentValues values = new ContentValues();
         values.put(KEY_PATIENT_NAME, patient.getName());
         values.put(KEY_MONDAY_VALUE, patient.getMondayValue());
@@ -71,19 +72,18 @@ public class PatientDatabaseHelper extends SQLiteOpenHelper {
 
     public Patient getPatient(String name) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_PATIENTS, new String[] { KEY_PATIENT_NAME, KEY_MONDAY_VALUE, KEY_TUESDAY_VALUE, KEY_WEDNESDAY_VALUE, KEY_THURSDAY_VALUE, KEY_FRIDAY_VALUE, KEY_SATURDAY_VALUE, KEY_SUNDAY_VALUE },
-                KEY_PATIENT_NAME + "=?", new String[] { name }, null, null, null, null);
-
+        Cursor cursor = db.query(TABLE_PATIENTS, new String[]{KEY_PATIENT_ID, KEY_PATIENT_NAME, KEY_MONDAY_VALUE, KEY_TUESDAY_VALUE, KEY_WEDNESDAY_VALUE, KEY_THURSDAY_VALUE, KEY_FRIDAY_VALUE, KEY_SATURDAY_VALUE, KEY_SUNDAY_VALUE},
+                KEY_PATIENT_NAME + "=?", new String[]{name}, null, null, null, null);
         if (cursor != null && cursor.moveToFirst()) {
             Patient patient = new Patient(
-                    cursor.getString(cursor.getColumnIndex(KEY_PATIENT_NAME)),
-                    cursor.getInt(cursor.getColumnIndex(KEY_MONDAY_VALUE)),
-                    cursor.getInt(cursor.getColumnIndex(KEY_TUESDAY_VALUE)),
-                    cursor.getInt(cursor.getColumnIndex(KEY_WEDNESDAY_VALUE)),
-                    cursor.getInt(cursor.getColumnIndex(KEY_THURSDAY_VALUE)),
-                    cursor.getInt(cursor.getColumnIndex(KEY_FRIDAY_VALUE)),
-                    cursor.getInt(cursor.getColumnIndex(KEY_SATURDAY_VALUE)),
-                    cursor.getInt(cursor.getColumnIndex(KEY_SUNDAY_VALUE))
+                    cursor.getString(cursor.getColumnIndexOrThrow(KEY_PATIENT_NAME)),
+                    cursor.getInt(cursor.getColumnIndexOrThrow(KEY_MONDAY_VALUE)),
+                    cursor.getInt(cursor.getColumnIndexOrThrow(KEY_TUESDAY_VALUE)),
+                    cursor.getInt(cursor.getColumnIndexOrThrow(KEY_WEDNESDAY_VALUE)),
+                    cursor.getInt(cursor.getColumnIndexOrThrow(KEY_THURSDAY_VALUE)),
+                    cursor.getInt(cursor.getColumnIndexOrThrow(KEY_FRIDAY_VALUE)),
+                    cursor.getInt(cursor.getColumnIndexOrThrow(KEY_SATURDAY_VALUE)),
+                    cursor.getInt(cursor.getColumnIndexOrThrow(KEY_SUNDAY_VALUE))
             );
             cursor.close();
             return patient;
@@ -91,39 +91,41 @@ public class PatientDatabaseHelper extends SQLiteOpenHelper {
         return null;
     }
 
-    // Add this method in the PatientDatabaseHelper class
     public void updatePatientDayValue(String patientName, String day, int value) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-
-        switch(day) {
-            case "Monday":
-                values.put(KEY_MONDAY_VALUE, value);
-                break;
-            case "Tuesday":
-                values.put(KEY_TUESDAY_VALUE, value);
-                break;
-            case "Wednesday":
-                values.put(KEY_WEDNESDAY_VALUE, value);
-                break;
-            case "Thursday":
-                values.put(KEY_THURSDAY_VALUE, value);
-                break;
-            case "Friday":
-                values.put(KEY_FRIDAY_VALUE, value);
-                break;
-            case "Saturday":
-                values.put(KEY_SATURDAY_VALUE, value);
-                break;
-            case "Sunday":
-                values.put(KEY_SUNDAY_VALUE, value);
-                break;
+        String column = getKeyForDay(day);
+        if (column != null) {
+            values.put(column, value);
+            db.update(TABLE_PATIENTS, values, KEY_PATIENT_NAME + " = ?", new String[]{patientName});
         }
-
-        db.update(TABLE_PATIENTS, values, KEY_PATIENT_NAME + " = ?", new String[]{ patientName });
         db.close();
     }
 
+    private String getKeyForDay(String day) {
+        switch (day) {
+            case "Monday": return KEY_MONDAY_VALUE;
+            case "Tuesday": return KEY_TUESDAY_VALUE;
+            case "Wednesday": return KEY_WEDNESDAY_VALUE;
+            case "Thursday": return KEY_THURSDAY_VALUE;
+            case "Friday": return KEY_FRIDAY_VALUE;
+            case "Saturday": return KEY_SATURDAY_VALUE;
+            case "Sunday": return KEY_SUNDAY_VALUE;
+            default: return null;
+        }
+    }
 
-    // Additional methods for updating, deleting, and fetching patients can be added here
+    public List<String> getAllPatientNames() {
+        List<String> patientNames = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_PATIENTS, new String[]{KEY_PATIENT_NAME}, null, null, null, null, KEY_PATIENT_NAME + " ASC");
+
+        if (cursor.moveToFirst()) {
+            do {
+                patientNames.add(cursor.getString(cursor.getColumnIndex(KEY_PATIENT_NAME)));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return patientNames;
+    }
 }
