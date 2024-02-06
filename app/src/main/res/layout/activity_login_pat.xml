@@ -7,6 +7,8 @@
     android:background="@drawable/background3"
     tools:context=".LoginPAT">
 
+
+
     <!-- AAL PD Header -->
     <TextView
         android:id="@+id/headerTextView"
@@ -20,6 +22,20 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+
+    <!-- Background for Username and Password -->
+    <View
+        android:id="@+id/roundedBackground"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/rounded_background"
+        app:layout_constraintStart_toStartOf="@+id/usernameEditText"
+        app:layout_constraintEnd_toEndOf="@+id/usernameEditText"
+        app:layout_constraintTop_toTopOf="@+id/usernameEditText"
+        app:layout_constraintBottom_toBottomOf="@+id/passwordEditText"
+        android:layout_marginStart="-10dp"
+        android:layout_marginEnd="-10dp" />
 
     <!-- Username EditText -->
     <EditText
