@@ -1,12 +1,18 @@
 package com.example.aal_appdev_pilldespenser;
 
 import androidx.appcompat.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.widget.ImageButton;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import androidx.appcompat.app.AlertDialog;
+
+
 
 public class PD extends AppCompatActivity implements TutorialStepOneDialogFragment.TutorialStepOneListener, TutorialStepTwoDialogFragment.TutorialStepTwoListener {
 
@@ -48,21 +54,41 @@ public class PD extends AppCompatActivity implements TutorialStepOneDialogFragme
     }
 
     private void sendData(String data) {
-        // MQTT data sending logic
         new Thread(() -> {
             try {
-                MqttClient client = new MqttClient("tcp://test.mosquitto.org:1883", MqttClient.generateClientId(), null);
+                MqttClient client = new MqttClient("tcp://broker.emqx.io:1883", MqttClient.generateClientId(), null);
                 client.connect();
                 MqttMessage message = new MqttMessage(data.getBytes());
                 client.publish("aalpd2023", message);
                 client.disconnect();
                 isDataSent = true; // Mark the data as sent
+
+                new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                    runOnUiThread(() -> showCompletionDialog(data));
+                }, 1000); // Display the popup after 1 second
             } catch (MqttException e) {
                 e.printStackTrace();
-                // Handle MQTT exception
             }
         }).start();
     }
+
+    private void showCompletionDialog(String data) {
+        String patientName = data.split(",")[0]; // Shorten to only the name part
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Pills Dispensed");
+        builder.setMessage("Pills are now being dispensed for: " + patientName)
+                .setPositiveButton("OK", (dialog, which) -> {
+                    Intent intent = new Intent(PD.this, MainActivity.class);
+                    startActivity(intent); // Navigate back to MainActivity
+                });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        // You might also consider customizing the dialog layout to ensure the text is centered
+    }
+
 
     private boolean isValidDataFormat(String data) {
         // Implement data validation logic here

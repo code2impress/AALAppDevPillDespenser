@@ -64,13 +64,6 @@ public class TutorialStepTwoDialogFragment extends DialogFragment {
         builder.setView(view)
                 .setPositiveButton("Done", (dialog, id) -> listener.onTutorialStepTwoCompleted());
 
-        // You might have an image view or any other element to explain the second step
-        // ImageView imageView = view.findViewById(R.id.yourImageViewId);
-        // Set up the image or content for your tutorial step here
-
-        // Optional: If you have a custom button in your layout, you can set its onClickListener here
-        // Button doneButton = view.findViewById(R.id.done_button);
-        // doneButton.setOnClickListener(v -> listener.onTutorialStepTwoCompleted());
 
         return builder.create();
     }
