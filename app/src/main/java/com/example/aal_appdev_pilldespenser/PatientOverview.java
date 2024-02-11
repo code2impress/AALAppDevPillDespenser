@@ -2,8 +2,21 @@ package com.example.aal_appdev_pilldespenser;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.SharedPreferences;
-import android.widget.TextView;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.widget.TextView;
+
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 public class PatientOverview extends AppCompatActivity {
 
@@ -11,28 +24,74 @@ public class PatientOverview extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_patient_overview);
-
-        // Fetch the shared preferences to get the username
-        SharedPreferences sharedPreferences = getSharedPreferences("LoginPrefs", MODE_PRIVATE);
-        String username = sharedPreferences.getString("username", "User"); // Default to "User" if no username found
-
-        // Update greeting TextView with username
-        TextView greetingTextView = findViewById(R.id.greetingTextView);
-        greetingTextView.setText(getString(R.string.greeting_text, username)); // Assuming you have a string resource with a placeholder
-
-        // Use UserDatabaseHelper to access pill intake data
-        UserDatabaseHelper dbHelper = new UserDatabaseHelper(this);
-
-        // Assuming you have methods to calculate the start and end date of the current week
-        String startDate = "2023-01-01"; // Placeholder, calculate dynamically
-        String endDate = "2023-01-07"; // Placeholder, calculate dynamically
-
-        // Get user ID for the username to fetch pills data
-        int userId = dbHelper.getUserIdByUsername(username);
-        int pillsTakenThisWeek = dbHelper.getPillsTakenInWeek(userId, startDate, endDate);
-
-        // Update TextView with pills taken this week
-        TextView pillsTakenTextView = findViewById(R.id.pillsTakenTextView); // Ensure this ID exists in your XML
-        pillsTakenTextView.setText(getString(R.string.pills_taken_this_week, pillsTakenThisWeek)); // Assuming you have a string resource with a placeholder
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updatePillsTakenData();
+        setupBarChart(); // Draw the bar chart
+    }
+
+    private void updatePillsTakenData() {
+        // Existing implementation...
+    }
+
+    private void setupBarChart() {
+        SharedPreferences sharedPreferences = getSharedPreferences("LoginPrefs", MODE_PRIVATE);
+        String username = sharedPreferences.getString("username", null);
+        if (username == null) return;
+
+        UserDatabaseHelper userDbHelper = new UserDatabaseHelper(this);
+        int userId = userDbHelper.getUserIdByUsername(username);
+        if (userId == -1) return;
+
+        PillDatabaseHelper pillDbHelper = new PillDatabaseHelper(this);
+        ArrayList<BarEntry> entries = new ArrayList<>();
+
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+
+        for (int i = 9; i >= 0; i--) {
+            // Calculate the start and end of each week
+            calendar.add(Calendar.WEEK_OF_YEAR, -i);
+            calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+            String startOfWeek = sdf.format(calendar.getTime());
+            calendar.add(Calendar.DAY_OF_WEEK, 6);
+            String endOfWeek = sdf.format(calendar.getTime());
+
+            int totalPills = pillDbHelper.getTotalPillsTakenByUserForDateRange(userId, startOfWeek, endOfWeek);
+            entries.add(new BarEntry(10 - i, totalPills));
+
+            // Reset calendar to current date for next iteration
+            calendar.setTime(new Date());
+            calendar.add(Calendar.WEEK_OF_YEAR, i);
+        }
+
+        if (!entries.isEmpty()) {
+            BarDataSet dataSet = new BarDataSet(entries, "Pills Taken");
+            dataSet.setColor(Color.BLUE);
+            BarData data = new BarData(dataSet);
+
+            BarChart chart = findViewById(R.id.pillsBarChart);
+            chart.setData(data);
+            chart.getDescription().setEnabled(false);
+            chart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+            chart.getAxisRight().setEnabled(false);
+            chart.animateY(1000);
+            chart.invalidate();
+        } else {
+            BarChart chart = findViewById(R.id.pillsBarChart);
+            chart.clear();
+            chart.setNoDataText("No pills data available");
+        }
+    }
+
+
+    private int fetchPillsTakenForWeek(int weekOffset) {
+        // Placeholder implementation
+        return 0; // You need to implement this
+    }
+
+    // Any additional methods or inner classes should be included before this closing bracket
 }

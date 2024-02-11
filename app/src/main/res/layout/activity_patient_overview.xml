@@ -32,7 +32,13 @@
             android:layout_height="200dp"
             android:background="@drawable/rounded_background"
             android:layout_marginBottom="20dp">
-            <!-- Your chart implementation will go here -->
+
+             <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/pillsBarChart"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginBottom="20dp"/>
+
         </FrameLayout>
 
         <!-- Pills Taken TextView -->

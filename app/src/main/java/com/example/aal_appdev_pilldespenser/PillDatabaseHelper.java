@@ -1,8 +1,10 @@
 package com.example.aal_appdev_pilldespenser;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class PillDatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "UserPillDatabase.db";
@@ -31,4 +33,26 @@ public class PillDatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Handle database version upgrades here
     }
+
+    public int getTotalPillsTakenByUserForDateRange(int userId, String startDate, String endDate) {
+        int totalPills = 0;
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT SUM(" + KEY_PILLS_TAKEN + ") AS total FROM " + TABLE_PILL_INTAKE
+                + " WHERE " + KEY_USER_ID + " = ? AND " + KEY_DATE + " BETWEEN ? AND ?";
+        Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(userId), startDate, endDate});
+
+        if (cursor.moveToFirst()) {
+            int totalColumnIndex = cursor.getColumnIndex("total");
+            if (totalColumnIndex != -1) {
+                totalPills = cursor.getInt(totalColumnIndex);
+            } else {
+                // Handle the error or log it
+                Log.e("PillDatabaseHelper", "Column 'total' was not found in the result set.");
+            }
+        }
+        cursor.close();
+        return totalPills;
+    }
+
+
 }

@@ -14,7 +14,8 @@ import androidx.appcompat.app.AlertDialog;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-
+import android.util.Log;
+import android.content.SharedPreferences;
 
 
 
@@ -67,32 +68,42 @@ public class PD extends AppCompatActivity implements TutorialStepOneDialogFragme
                 client.disconnect();
                 isDataSent = true; // Mark the data as sent
 
-                // Assuming 'data' contains the username and the number of pills dispensed
-                // For simplicity, let's say it's formatted as "username,pillsDispensed"
-                String[] parts = data.split(",");
-                if (parts.length >= 2) {
-                    String username = parts[0];
-                    int pillsDispensed = Integer.parseInt(parts[1]); // Ensure this is safe
-                    // Get today's date as a string
-                    String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+                // Fetch the currently logged-in user's username from SharedPreferences
+                SharedPreferences sharedPreferences = getSharedPreferences("LoginPrefs", MODE_PRIVATE);
+                String username = sharedPreferences.getString("username", null);
 
-                    // Save the pills dispensed data
-                    UserDatabaseHelper dbHelper = new UserDatabaseHelper(PD.this);
-                    int userId = dbHelper.getUserIdByUsername(username);
-                    if(userId != -1) { // Ensure user is found
-                        dbHelper.addPillIntake(userId, date, pillsDispensed);
+                if (username != null) {
+                    // Split the data string to get the pills dispensed
+                    String[] parts = data.split(",");
+                    if (parts.length == 8) { // Ensure there are 8 parts: username and 7 days of pills
+                        // Sum the pills dispensed for each day
+                        int totalPillsDispensed = 0;
+                        for (int i = 1; i <= 7; i++) {
+                            totalPillsDispensed += Integer.parseInt(parts[i]);
+                        }
+
+                        // Get today's date as a string
+                        String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+
+                        // Save the total pills dispensed data for the currently logged-in user
+                        UserDatabaseHelper dbHelper = new UserDatabaseHelper(PD.this);
+                        int userId = dbHelper.getUserIdByUsername(username);
+                        if (userId != -1) { // Ensure user is found
+                            dbHelper.addPillIntake(userId, date, totalPillsDispensed);
+                        }
                     }
                 }
 
-                // Continue with showing the completion dialog
-                new Handler(Looper.getMainLooper()).postDelayed(() -> {
-                    runOnUiThread(() -> showCompletionDialog(data));
-                }, 1000);
-            } catch (MqttException e) {
-                e.printStackTrace();
+                // Delay to show the completion dialog
+                new Handler(Looper.getMainLooper()).postDelayed(() -> runOnUiThread(() -> showCompletionDialog(data)), 1000);
+
+            } catch (MqttException | NumberFormatException e) {
+                Log.e("PD", "Error processing pill intake data", e);
             }
         }).start();
     }
+
+
 
 
     private void showCompletionDialog(String data) {
