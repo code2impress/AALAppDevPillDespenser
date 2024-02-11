@@ -11,6 +11,10 @@ import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import androidx.appcompat.app.AlertDialog;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 
 
 
@@ -63,14 +67,33 @@ public class PD extends AppCompatActivity implements TutorialStepOneDialogFragme
                 client.disconnect();
                 isDataSent = true; // Mark the data as sent
 
+                // Assuming 'data' contains the username and the number of pills dispensed
+                // For simplicity, let's say it's formatted as "username,pillsDispensed"
+                String[] parts = data.split(",");
+                if (parts.length >= 2) {
+                    String username = parts[0];
+                    int pillsDispensed = Integer.parseInt(parts[1]); // Ensure this is safe
+                    // Get today's date as a string
+                    String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+
+                    // Save the pills dispensed data
+                    UserDatabaseHelper dbHelper = new UserDatabaseHelper(PD.this);
+                    int userId = dbHelper.getUserIdByUsername(username);
+                    if(userId != -1) { // Ensure user is found
+                        dbHelper.addPillIntake(userId, date, pillsDispensed);
+                    }
+                }
+
+                // Continue with showing the completion dialog
                 new Handler(Looper.getMainLooper()).postDelayed(() -> {
                     runOnUiThread(() -> showCompletionDialog(data));
-                }, 1000); // Display the popup after 1 second
+                }, 1000);
             } catch (MqttException e) {
                 e.printStackTrace();
             }
         }).start();
     }
+
 
     private void showCompletionDialog(String data) {
         String patientName = data.split(",")[0]; // Shorten to only the name part

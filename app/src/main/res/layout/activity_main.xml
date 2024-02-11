@@ -4,20 +4,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background3">
+    android:background="@drawable/background3"> <!-- Background set as drawable background3 -->
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:weightSum="1">
+        android:weightSum="1"> <!-- Linear layout to organize views vertically, with weight sum 1 -->
 
+        <!-- Header ConstraintLayout -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.2"
-            tools:context=".MainActivity">
+            tools:context=".MainActivity"> <!-- Header with weight 0.2 -->
 
+            <!-- Header TextView -->
             <TextView
                 android:id="@+id/headertext"
                 android:layout_width="0dp"
@@ -34,12 +36,14 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <!-- First ImageButton ConstraintLayout -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.4"
-            android:layout_gravity="center">
+            android:layout_gravity="center"> <!-- ConstraintLayout with weight 0.4 for the first ImageButton -->
 
+            <!-- ImageButton for pills -->
             <ImageButton
                 android:id="@+id/button1"
                 android:layout_width="246dp"
@@ -55,12 +59,14 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <!-- Second ImageButton ConstraintLayout -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="0.4"
-            android:layout_gravity="center">
+            android:layout_gravity="center"> <!-- ConstraintLayout with weight 0.4 for the second ImageButton -->
 
+            <!-- ImageButton for doctor -->
             <ImageButton
                 android:id="@+id/button2"
                 android:layout_width="186dp"
@@ -78,7 +84,7 @@
 
     </LinearLayout>
 
-    <!-- Small round ImageButton for LoginPAT -->
+    <!-- ImageButton for user login -->
     <ImageButton
         android:id="@+id/loginPatButton"
         android:layout_width="48dp"
@@ -91,6 +97,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp" />
 
+    <!-- Logout Button -->
     <Button
         android:id="@+id/logoutButton"
         android:layout_width="wrap_content"
@@ -98,6 +105,6 @@
         android:text="Logout"
         android:layout_gravity="center_horizontal|bottom"
         android:layout_marginBottom="20dp"
-        android:visibility="gone" />
+        android:visibility="gone" /> <!-- Initially hidden -->
 
 </FrameLayout>

@@ -101,8 +101,23 @@ public class MainActivity extends AppCompatActivity {
         loginPatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, LoginPAT.class);
-                startActivity(intent);
+                SharedPreferences sharedPreferences = getSharedPreferences("LoginPrefs", MODE_PRIVATE);
+                boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
+                String userType = sharedPreferences.getString("userType", "");
+
+                if (isLoggedIn && "doctor".equals(userType)) {
+                    // If the user is a doctor, redirect to doctor's activity
+                    Intent intent = new Intent(MainActivity.this, docgenqr.class);
+                    startActivity(intent);
+                } else if (isLoggedIn && "patient".equals(userType)) {
+                    // If the user is a patient, redirect to patient's overview activity
+                    Intent intent = new Intent(MainActivity.this, PatientOverview.class);
+                    startActivity(intent);
+                } else {
+                    // If no user is logged in, redirect to patient login activity
+                    Intent intent = new Intent(MainActivity.this, LoginPAT.class);
+                    startActivity(intent);
+                }
             }
         });
     }

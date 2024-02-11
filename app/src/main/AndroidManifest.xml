@@ -19,6 +19,9 @@
         android:theme="@style/Theme.AALAppDevPillDespenser"
         tools:targetApi="31">
         <activity
+            android:name=".PatientOverview"
+            android:exported="false" />
+        <activity
             android:name=".LoginPAT"
             android:exported="false" />
         <activity
