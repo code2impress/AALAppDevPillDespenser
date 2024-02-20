@@ -16,7 +16,7 @@ import java.util.Date;
 import java.util.Locale;
 import android.util.Log;
 import android.content.SharedPreferences;
-
+import java.util.Calendar; // Import Calendar
 
 
 public class PD extends AppCompatActivity implements TutorialStepOneDialogFragment.TutorialStepOneListener, TutorialStepTwoDialogFragment.TutorialStepTwoListener {
@@ -68,32 +68,27 @@ public class PD extends AppCompatActivity implements TutorialStepOneDialogFragme
                 client.disconnect();
                 isDataSent = true; // Mark the data as sent
 
-                // Fetch the currently logged-in user's username from SharedPreferences
+                // Use already obtained SharedPreferences and username variables
                 SharedPreferences sharedPreferences = getSharedPreferences("LoginPrefs", MODE_PRIVATE);
                 String username = sharedPreferences.getString("username", null);
 
                 if (username != null) {
-                    // Split the data string to get the pills dispensed
                     String[] parts = data.split(",");
-                    if (parts.length == 8) { // Ensure there are 8 parts: username and 7 days of pills
-                        // Sum the pills dispensed for each day
-                        int totalPillsDispensed = 0;
-                        for (int i = 1; i <= 7; i++) {
-                            totalPillsDispensed += Integer.parseInt(parts[i]);
-                        }
+                    if (parts.length < 8) return; // Adjust based on expected length
 
-                        // Get today's date as a string
-                        String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+                    UserDatabaseHelper dbHelper = new UserDatabaseHelper(this);
+                    int userId = dbHelper.getUserIdByUsername(username);
+                    if (userId == -1) return;
 
-                        // Save the total pills dispensed data for the currently logged-in user
-                        UserDatabaseHelper dbHelper = new UserDatabaseHelper(PD.this);
-                        int userId = dbHelper.getUserIdByUsername(username);
-                        if (userId != -1) { // Ensure user is found
-                            dbHelper.addPillIntake(userId, date, totalPillsDispensed);
-                        }
+                    Calendar calendar = Calendar.getInstance();
+                    int currentWeekOfYear = calendar.get(Calendar.WEEK_OF_YEAR);
+                    String date = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+
+                    for (int i = 1; i < parts.length; i++) { // Start from 1 to skip the name part
+                        int pillsTaken = Integer.parseInt(parts[i]);
+                        dbHelper.addPillIntake(userId, date, currentWeekOfYear, pillsTaken);
                     }
                 }
-
                 // Delay to show the completion dialog
                 new Handler(Looper.getMainLooper()).postDelayed(() -> runOnUiThread(() -> showCompletionDialog(data)), 1000);
 
@@ -102,6 +97,7 @@ public class PD extends AppCompatActivity implements TutorialStepOneDialogFragme
             }
         }).start();
     }
+
 
 
 
