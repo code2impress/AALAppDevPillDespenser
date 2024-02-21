@@ -61,11 +61,25 @@ public class PD extends AppCompatActivity implements TutorialStepOneDialogFragme
     private void sendData(String data) {
         new Thread(() -> {
             try {
-                MqttClient client = new MqttClient("tcp://broker.emqx.io:1883", MqttClient.generateClientId(), null);
+                MqttClient client = new MqttClient("tcp://test.mosquitto.org:1883", MqttClient.generateClientId(), null);
                 client.connect();
                 MqttMessage message = new MqttMessage(data.getBytes());
-                client.publish("aalpd2023", message);
-                client.disconnect();
+                for (int i = 0; i < 50; i++) {
+                    final int index = i;
+                    new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                        try {
+                            client.publish("aalpd2023", message);
+                            if (index == 49) { // After the last message
+                                client.disconnect();
+                                isDataSent = true;
+                                // Show the dialog on the UI thread after the last message is sent
+                                new Handler(Looper.getMainLooper()).post(() -> showCompletionDialog(data));
+                            }
+                        } catch (MqttException e) {
+                            Log.e("PD", "Error sending MQTT message", e);
+                        }
+                    }, i * 500); // Schedule the task with increasing delay
+                }
                 isDataSent = true; // Mark the data as sent
 
                 // Use already obtained SharedPreferences and username variables
