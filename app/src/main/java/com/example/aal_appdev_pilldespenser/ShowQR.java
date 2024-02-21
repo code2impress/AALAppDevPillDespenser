@@ -20,9 +20,7 @@ import com.google.zxing.WriterException;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.google.zxing.common.BitMatrix;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import android.print.PageRange;
-
 
 public class ShowQR extends AppCompatActivity {
 

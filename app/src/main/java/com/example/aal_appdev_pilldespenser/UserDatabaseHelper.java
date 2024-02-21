@@ -35,6 +35,7 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        // Create users table
         String CREATE_USERS_TABLE = "CREATE TABLE " + TABLE_USERS +
                 "(" +
                 KEY_USER_ID + " INTEGER PRIMARY KEY," +
@@ -44,7 +45,7 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
                 ")";
         db.execSQL(CREATE_USERS_TABLE);
 
-        // Add a week_of_year column to your pill intake table
+        // Create pill intake table
         String CREATE_PILL_INTAKE_TABLE = "CREATE TABLE " + TABLE_PILL_INTAKE + "("
                 + KEY_USER_ID + " INTEGER,"
                 + KEY_DATE + " TEXT,"
@@ -53,14 +54,17 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
                 + "FOREIGN KEY(" + KEY_USER_ID + ") REFERENCES " + TABLE_USERS + "(" + KEY_USER_ID + "))";
         db.execSQL(CREATE_PILL_INTAKE_TABLE);
 
+        // Add initial users (permanent doctor and a sample patient)
         addPermanentDoctorUser(db);
         addSamplePatientUser(db);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        // Drop tables if exist
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_PILL_INTAKE);
+        // Recreate tables
         onCreate(db);
 
         if (oldVersion < 2) {
@@ -76,11 +80,13 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
         }
 
         if (oldVersion < 4) { // Assuming the current version is 4 after adding the week_of_year
+            // Add week_of_year column if not exists
             String alterTable = "ALTER TABLE " + TABLE_PILL_INTAKE + " ADD COLUMN " + KEY_WEEK_OF_YEAR + " INTEGER DEFAULT 0";
             db.execSQL(alterTable);
         }
     }
 
+    // Method to add a user to the database
     public void addUser(User user) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -91,6 +97,7 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    // Method to validate user credentials
     public String validateUser(String username, String password) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_USERS, new String[]{KEY_USER_ID, KEY_USERNAME, KEY_PASSWORD, KEY_USER_TYPE},
@@ -103,6 +110,7 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
         return null;
     }
 
+    // Method to get user ID by username
     public int getUserIdByUsername(String username) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_USERS, new String[]{KEY_USER_ID},
@@ -115,6 +123,7 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
         return -1; // Indicates user not found or error
     }
 
+    // Method to add pill intake data to the database
     public void addPillIntake(int userId, String date, int weekOfYear, int pillsTaken) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -126,12 +135,12 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-
+    // Method to get the total number of pills taken by a user for a specific week of the year
     public int getPillsTakenForWeekOfYear(int userId, int weekOfYear) {
         SQLiteDatabase db = this.getReadableDatabase();
         int totalPills = 0;
 
-        // Adjust the query to filter by week_of_year
+        // Query to sum up pills taken by the user for the specified week of the year
         String query = "SELECT SUM(" + KEY_PILLS_TAKEN + ") AS total FROM " + TABLE_PILL_INTAKE +
                 " WHERE " + KEY_USER_ID + " = ? AND " + KEY_WEEK_OF_YEAR + " = ?";
         Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(userId), String.valueOf(weekOfYear)});
@@ -143,12 +152,12 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
         return totalPills;
     }
 
-
+    // Method to get the total number of pills taken by a user
     public int getTotalPillsTakenByUser(int userId) {
         SQLiteDatabase db = this.getReadableDatabase();
         int totalPills = 0;
 
-        // A query to sum up all pills taken by the user
+        // Query to sum up all pills taken by the user
         String query = "SELECT SUM(" + KEY_PILLS_TAKEN + ") AS total FROM " + TABLE_PILL_INTAKE + " WHERE " + KEY_USER_ID + " = ?";
         Cursor cursor = db.rawQuery(query, new String[]{String.valueOf(userId)});
 
@@ -159,7 +168,7 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
         return totalPills;
     }
 
-
+    // Method to add a permanent doctor user if not already exists
     private void addPermanentDoctorUser(SQLiteDatabase db) {
         ContentValues values = new ContentValues();
         values.put(KEY_USERNAME, "docadmin");
@@ -177,6 +186,7 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
     }
 
+    // Method to add a sample patient user with pill intake data for the last 10 weeks
     private void addSamplePatientUser(SQLiteDatabase db) {
         ContentValues patientValues = new ContentValues();
         patientValues.put(KEY_USERNAME, "patient0");

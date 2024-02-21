@@ -3,7 +3,6 @@ package com.example.aal_appdev_pilldespenser;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
 import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,7 +14,7 @@ import android.widget.Toast;
 import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
-    private Button logoutButton; // Use Button instead of ImageButton
+    private Button logoutButton;
 
     private static final int PERMISSIONS_REQUEST_CODE = 100;
     private static final String[] REQUIRED_PERMISSIONS = {

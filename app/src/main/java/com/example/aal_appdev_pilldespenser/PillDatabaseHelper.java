@@ -15,10 +15,12 @@ public class PillDatabaseHelper extends SQLiteOpenHelper {
     private static final String TABLE_USERS = "users";
     private static final String KEY_USER_ID = "id";
 
+    // Constructor
     public PillDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
+    // Create the database tables
     @Override
     public void onCreate(SQLiteDatabase db) {
         String CREATE_PILL_INTAKE_TABLE = "CREATE TABLE " + TABLE_PILL_INTAKE + "("
@@ -29,11 +31,13 @@ public class PillDatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_PILL_INTAKE_TABLE);
     }
 
+    // Upgrade the database schema if needed
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Handle database version upgrades here
     }
 
+    // Method to get the total number of pills taken by a user within a date range
     public int getTotalPillsTakenByUserForDateRange(int userId, String startDate, String endDate) {
         int totalPills = 0;
         SQLiteDatabase db = this.getReadableDatabase();
@@ -46,13 +50,11 @@ public class PillDatabaseHelper extends SQLiteOpenHelper {
             if (totalColumnIndex != -1) {
                 totalPills = cursor.getInt(totalColumnIndex);
             } else {
-                // Handle the error or log it
+                // Log an error if the 'total' column is not found in the result set
                 Log.e("PillDatabaseHelper", "Column 'total' was not found in the result set.");
             }
         }
         cursor.close();
         return totalPills;
     }
-
-
 }

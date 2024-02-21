@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.util.ArrayList;
 import java.util.List;
 
+// Helper class for managing the SQLite database used for storing patient data
 public class PatientDatabaseHelper extends SQLiteOpenHelper {
     // Database Info
     private static final String DATABASE_NAME = "PatientDatabase";
@@ -17,6 +18,7 @@ public class PatientDatabaseHelper extends SQLiteOpenHelper {
     private static final String TABLE_PATIENTS = "patients";
 
     // Patient Table Columns
+    // Column names for the patient table
     private static final String KEY_PATIENT_ID = "id";
     private static final String KEY_PATIENT_NAME = "name";
     private static final String KEY_MONDAY_VALUE = "mondayValue";
@@ -27,10 +29,12 @@ public class PatientDatabaseHelper extends SQLiteOpenHelper {
     private static final String KEY_SATURDAY_VALUE = "saturdayValue";
     private static final String KEY_SUNDAY_VALUE = "sundayValue";
 
+    // Constructor
     public PatientDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
+    // Create the database tables
     @Override
     public void onCreate(SQLiteDatabase db) {
         String CREATE_PATIENTS_TABLE = "CREATE TABLE " + TABLE_PATIENTS +
@@ -48,12 +52,14 @@ public class PatientDatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_PATIENTS_TABLE);
     }
 
+    // Upgrade the database schema if needed
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_PATIENTS);
         onCreate(db);
     }
 
+    // Add a new patient to the database
     public void addPatient(Patient patient) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -70,10 +76,12 @@ public class PatientDatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    // Retrieve a patient from the database by their name
     public Patient getPatient(String name) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_PATIENTS, new String[]{KEY_PATIENT_ID, KEY_PATIENT_NAME, KEY_MONDAY_VALUE, KEY_TUESDAY_VALUE, KEY_WEDNESDAY_VALUE, KEY_THURSDAY_VALUE, KEY_FRIDAY_VALUE, KEY_SATURDAY_VALUE, KEY_SUNDAY_VALUE},
                 KEY_PATIENT_NAME + "=?", new String[]{name}, null, null, null, null);
+        // If a matching patient is found, create a Patient object and return it
         if (cursor != null && cursor.moveToFirst()) {
             Patient patient = new Patient(
                     cursor.getString(cursor.getColumnIndexOrThrow(KEY_PATIENT_NAME)),
@@ -88,9 +96,10 @@ public class PatientDatabaseHelper extends SQLiteOpenHelper {
             cursor.close();
             return patient;
         }
-        return null;
+        return null; // If no patient is found, return null
     }
 
+    // Update the value of a specific day for a given patient
     public void updatePatientDayValue(String patientName, String day, int value) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -102,6 +111,7 @@ public class PatientDatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    // Helper method to get the column name for a given day
     private String getKeyForDay(String day) {
         switch (day) {
             case "Monday": return KEY_MONDAY_VALUE;
@@ -115,11 +125,13 @@ public class PatientDatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    // Retrieve a list of all patient names from the database
     public List<String> getAllPatientNames() {
         List<String> patientNames = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_PATIENTS, new String[]{KEY_PATIENT_NAME}, null, null, null, null, KEY_PATIENT_NAME + " ASC");
 
+        // Iterate through the cursor and add each patient name to the list
         if (cursor.moveToFirst()) {
             do {
                 patientNames.add(cursor.getString(cursor.getColumnIndex(KEY_PATIENT_NAME)));

@@ -13,10 +13,8 @@ import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.content.Intent;
-import android.os.Bundle;
 import android.widget.ImageButton;
 import android.widget.Toast;
-import java.util.ArrayList;
 import java.util.List;
 
 public class docgenqr extends AppCompatActivity {
@@ -62,7 +60,7 @@ public class docgenqr extends AppCompatActivity {
             }
         });
 
-// Handle Spinner Item Selected
+        // Handle Spinner Item Selected
         patientSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

@@ -8,7 +8,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.Context;
+
 
 public class LoginPAT extends AppCompatActivity {
 

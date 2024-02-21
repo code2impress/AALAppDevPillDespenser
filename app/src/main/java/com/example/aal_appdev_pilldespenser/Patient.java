@@ -55,6 +55,4 @@ public class Patient {
         return sundayValue;
     }
 
-    // Setters (if needed)
-    // ...
 }

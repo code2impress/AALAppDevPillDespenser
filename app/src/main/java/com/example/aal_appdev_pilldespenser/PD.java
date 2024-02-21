@@ -16,8 +16,7 @@ import java.util.Date;
 import java.util.Locale;
 import android.util.Log;
 import android.content.SharedPreferences;
-import java.util.Calendar; // Import Calendar
-
+import java.util.Calendar;
 
 public class PD extends AppCompatActivity implements TutorialStepOneDialogFragment.TutorialStepOneListener, TutorialStepTwoDialogFragment.TutorialStepTwoListener {
 
@@ -29,6 +28,7 @@ public class PD extends AppCompatActivity implements TutorialStepOneDialogFragme
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pd);
 
+        // Initialize ImageButton and set click listener
         imageButton = findViewById(R.id.imageButton);
         imageButton.setOnClickListener(view -> {
             if (!isDataSent) {
@@ -38,26 +38,31 @@ public class PD extends AppCompatActivity implements TutorialStepOneDialogFragme
         });
     }
 
+    // Method to display the first step of the tutorial
     private void showTutorialStepOne() {
-        // Display the first tutorial dialog
         new TutorialStepOneDialogFragment().show(getSupportFragmentManager(), "TutorialStepOne");
     }
 
+    // Callback when first tutorial step is completed
     @Override
     public void onTutorialStepOneCompleted() {
         // Display the second tutorial dialog when the first step is completed
         new TutorialStepTwoDialogFragment().show(getSupportFragmentManager(), "TutorialStepTwo");
     }
 
+    // Callback when second tutorial step is completed
     @Override
     public void onTutorialStepTwoCompleted() {
         // Tutorial is completed, proceed with the data sending process
         String scannedData = getIntent().getStringExtra("dataKey");
         sendData(scannedData);
-        imageButton.setEnabled(false); // Disable the button after sending the data
-        imageButton.setAlpha(0.4f); // Change the button's opacity to indicate it's disabled
+        // Disable the button after sending the data
+        imageButton.setEnabled(false);
+        // Change the button's opacity to indicate it's disabled
+        imageButton.setAlpha(0.4f);
     }
 
+    // Method to send data to MQTT broker
     private void sendData(String data) {
         new Thread(() -> {
             try {
@@ -98,10 +103,7 @@ public class PD extends AppCompatActivity implements TutorialStepOneDialogFragme
         }).start();
     }
 
-
-
-
-
+    // Method to show completion dialog after data is sent
     private void showCompletionDialog(String data) {
         String patientName = data.split(",")[0]; // Shorten to only the name part
 
@@ -119,7 +121,7 @@ public class PD extends AppCompatActivity implements TutorialStepOneDialogFragme
         // You might also consider customizing the dialog layout to ensure the text is centered
     }
 
-
+    // Placeholder method for data format validation
     private boolean isValidDataFormat(String data) {
         // Implement data validation logic here
         return true; // Placeholder for data format validation

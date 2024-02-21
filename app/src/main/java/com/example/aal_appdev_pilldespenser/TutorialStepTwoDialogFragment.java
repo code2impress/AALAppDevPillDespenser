@@ -14,14 +14,14 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import androidx.annotation.Nullable;
 
-
 public class TutorialStepTwoDialogFragment extends DialogFragment {
 
+    // Interface for communicating completion of tutorial step two
     public interface TutorialStepTwoListener {
         void onTutorialStepTwoCompleted();
     }
 
-    private TutorialStepTwoListener listener;
+    private TutorialStepTwoListener listener; // Listener reference
 
     @Override
     public void onStart() {
@@ -30,6 +30,7 @@ public class TutorialStepTwoDialogFragment extends DialogFragment {
         if (dialog != null) {
             Window window = dialog.getWindow();
             if (window != null) {
+                // Get display metrics
                 DisplayMetrics displayMetrics = new DisplayMetrics();
                 WindowManager windowManager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
                 windowManager.getDefaultDisplay().getMetrics(displayMetrics);
@@ -46,8 +47,10 @@ public class TutorialStepTwoDialogFragment extends DialogFragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         try {
+            // Initialize listener
             listener = (TutorialStepTwoListener) context;
         } catch (ClassCastException e) {
+            // Throw exception if the context does not implement the listener interface
             throw new ClassCastException(context.toString() + " must implement TutorialStepTwoListener");
         }
     }
@@ -55,6 +58,7 @@ public class TutorialStepTwoDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+        // Create dialog using AlertDialog.Builder
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         // Inflate and set the layout for the dialog
@@ -63,7 +67,6 @@ public class TutorialStepTwoDialogFragment extends DialogFragment {
         View view = inflater.inflate(R.layout.fragment_tutorial_step_two_dialog, null);
         builder.setView(view)
                 .setPositiveButton("Done", (dialog, id) -> listener.onTutorialStepTwoCompleted());
-
 
         return builder.create();
     }
